@@ -23,7 +23,20 @@ const sendMessage = (req, res) => {
   }
 
   const data = req.body;
-  bot.sendMessage(lastChatId, JSON.stringify(data));
+  function formatJson(jsonData) {
+    return Object.entries(jsonData)
+      .map(([key, value]) => {
+        if (key === "----------") {
+          return `${key}: ${value}`;
+        }
+        return `${key}: ${value ? value : "м"}`;
+      })
+      .join("\n");
+  }
+
+  const formattedData = formatJson(data);
+
+  bot.sendMessage(lastChatId, formattedData);
 
   res.status(200).json({
     message: "OK",
